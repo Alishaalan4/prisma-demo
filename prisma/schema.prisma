@@ -18,6 +18,8 @@ model Author {
   email String @unique
   name  String
   books Book[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Book {
@@ -25,4 +27,58 @@ model Book {
   title    String
   authorId String
   author   Author @relation(fields: [authorId], references: [id])
+  publisherId String?
+  publisher   Publisher? @relation(fields: [publisherId], references: [id])
+  genres      Genre[]
+  reviews     Review[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
+model Publisher {
+    id    String @id @default(uuid())
+    name  String
+    books Book[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Genre{
+    id    String @id @default(uuid())
+    name  String
+    books Book[] 
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model User{
+    id    String @id @default(uuid())
+  email String @unique
+  name  String
+  reviews Review[]
+      createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+
+model Review{
+    id    String @id @default(uuid())
+  rating    Int
+  comment   String?
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+    
+}
+
+
+// One User → many Review
+// One Book → many Review
+// Each Review belongs to one User
+// Each Review belongs to one Book
